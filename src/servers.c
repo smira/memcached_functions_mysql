@@ -1015,4 +1015,23 @@ int memc_get_servers(memcached_st *clone)
   return retval ;
 }
 
+/*
+ * Get master memc server entry (not thread-safe!).
+ */
 
+memcached_st *memc_get_master()
+{
+    return master_memc;
+}
+
+int memc_master_lock()
+{
+    pthread_mutex_lock(&memc_servers_mutex);
+    return 0;
+}
+
+int memc_master_unlock()
+{
+    pthread_mutex_unlock(&memc_servers_mutex);
+    return 0;
+}
