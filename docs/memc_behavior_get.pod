@@ -1,0 +1,50 @@
+=head1 NAME
+
+memc_behavior_set
+
+=head1 UDF 
+
+Libmemcached User Defined Function for MySQL 
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+memc_behavior_get() is a UDF used to retrieve the behavior of a connection
+to a memcached server from within MySQL. An alias to this function is memc_servers_behavior_get();
+
+=head1 RETURN
+
+NULL
+
+=head1 USAGE 
+
+select memc_behavior_get('MEMCACHED_BEHAVIOR_SUPPORT_CAS');
+
+or with SET:
+
+set @setval = memc_behavior_get('MEMCACHED_BEHAVIOR_SUPPORT_CAS');
+select @setval;
+
+
+=head1 HOME
+
+To find out more information please check:
+L<http://hg.tangent.org/memcached_functions_mysql>
+L<http://tangent.org/552/libmemcached.html>
+
+=head1 INSTALL
+
+CREATE FUNCTION memc_behavior_get RETURNS STRING SONAME "libmemcached_functions_mysql.so";
+
+=head1 AUTHOR
+
+Patrick Galbraith, E<lt>patg@patg.netE<gt>
+Brian Aker, E<lt>brian@tangent.orgE<gt>
+
+=head1 SEE ALSO
+
+memc_set(), memc_behavior_get(), memc_behavior_set(), memc_behavior_set(), memc_list_behaviors()
+
+=cut
+

@@ -1,0 +1,53 @@
+=head1 NAME
+
+memc_append
+
+=head1 UDF 
+
+Libmemcached User Defined Function for MySQL 
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+memc_append() is a UDF used to prepend content to the end of an 
+existing individual value from the memcached server from within
+MySQL. The first argument you must pass in a key value. The second
+aregument must be a data value which you wish to append to the end
+of your existing value stored in memcached.
+
+memc_append_by_key() is a UDF that does the same thing as
+memc_append() with and additional (1st arg) master key.
+
+=head1 RETURN
+
+
+=head1 USAGE
+
+memc_append('keyfoo', ' this will be appended to the end of object');
+memc_append('master keyA', 'keyfoo', ' this will be appended to the end of object');
+
+NULL
+
+=head1 HOME
+
+To find out more information please check:
+L<http://hg.tangent.org/memcached_functions_mysql>
+L<http://tangent.org/552/libmemcached.html>
+
+=head1 INSTALL
+
+CREATE FUNCTION memc_append RETURNS INT SONAME "libmemcached_functions_mysql.so";
+CREATE FUNCTION memc_append_by_key RETURNS INT SONAME "libmemcached_functions_mysql.so";
+
+=head1 AUTHOR
+
+Patrick Galbraith, E<lt>patg@patg.netE<gt>
+Brian Aker, E<lt>brian@tangent.orgE<gt>
+
+=head1 SEE ALSO
+
+memc_prepend()
+
+=cut
+

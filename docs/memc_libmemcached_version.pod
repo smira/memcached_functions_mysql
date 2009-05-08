@@ -1,0 +1,44 @@
+=head1 NAME
+
+memc_libmemcached_version
+
+=head1 UDF 
+
+Libmemcached User Defined Function for MySQL 
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+memc_libmemcached_version() is a UDF used to obtain the version string of the 
+libmemcached library the Memcached Functions for MySQL were compiled/linked 
+against
+
+=head1 RETURN
+
+NULL
+
+=head1 USAGE 
+
+memc_libmemcached_version()
+
+=head1 HOME
+
+To find out more information please check:
+L<http://hg.tangent.org/memcached_functions_mysql>
+L<http://tangent.org/552/libmemcached.html>
+
+=head1 INSTALL
+
+CREATE FUNCTION memc_libmemcached_version RETURNS STRING SONAME "libmemcached_functions_mysql.so";
+
+=head1 AUTHOR
+
+Patrick Galbraith, E<lt>patg@patg.netE<gt>
+
+=head1 SEE ALSO
+
+memc_udf_version()
+
+=cut
+

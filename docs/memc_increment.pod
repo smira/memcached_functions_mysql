@@ -1,0 +1,47 @@
+=head1 NAME
+
+memc_increment
+
+=head1 UDF 
+
+Libmemcached User Defined Function for MySQL 
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+memc_increment() is a UDF used to increment an integer value stored in 
+memcached server from within MySQL. You first argument you must pass a 
+key value for the integer stored. The second argument can be can either
+pass a data value to increment by, or default is 1.
+
+=head1 RETURN
+
+NULL
+
+=head1 USAGE 
+
+memc_increment('keyfoo') <-- increments object stored as keyfoo by 1
+memc_increment('keyfoo', 3) <-- increments object stored as keyfoo by 3 
+
+=head1 HOME
+
+To find out more information please check:
+L<http://hg.tangent.org/memcached_functions_mysql>
+L<http://tangent.org/552/libmemcached.html>
+
+=head1 INSTALL
+
+CREATE FUNCTION memc_increment RETURNS INT SONAME "libmemcached_functions_mysql.so";
+
+=head1 AUTHOR
+
+Patrick Galbraith, E<lt>patg@patg.netE<gt>
+Brian Aker, E<lt>brian@tangent.orgE<gt>
+
+=head1 SEE ALSO
+
+memc_decrement()
+
+=cut
+

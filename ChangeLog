@@ -1,0 +1,64 @@
+0.9 Saturday April 11 12:00:00 EST 2009
+ * Fixed issue per http://blogs.sun.com/trond/entry/debugging_memcached_udf_for_mysql#comments
+ * Added memc_servers_version()
+
+0.8 Fri January 16 12:00:00 EST 2009
+  * Implemented memc_servers_behavior_get()
+  * Fixed memc_servers_behavior_set() to take non-boolean arguments
+  * Much much much work on behavioral functions
+  * implemented memc_libmemcached_version()
+  * implemented memc_list_hash_types() and memc_list_distribution_types()
+  * Added more tests for new functions
+
+0.7 Fri Oct 24 12:00:00 EDT 2008
+  * Removed LIBMEMCACHED_CONFIG_TEST, causing problems with some linux dists
+  * Bumped version
+  * Other cleanups
+  
+0.6 Fri Oct 12:00:00 EDT 2008
+  * Fixes from Trond Norbye for build issues
+	* Rewrote error handling
+	* Fixed memc_server_count
+	* Started work on prefix functions
+
+0.5 Thu May 8 12:00:00 EDT 2008
+  * Added expiration argument functionality to all functions
+    which utilize it in libmemcached (set, add, replace)
+  * Updated behaviors to correspond with latest libmemcached
+  * Added args processing function to reduce redundancy 
+  * Added tests for expiration testing
+
+0.4 Mon April 8 12:00:00 EDT 2008
+  * memc_add, memc_add_by_key, memc_set_by_key,
+    memc_get_by_key, memc_cas, memc_cas_by_key,
+    memc_replace_by_key, memc_append_by_key, 
+    memc_prepend_by_key added
+  * Added more behaviors memc_behavior_list
+  * Added usefull perl scripts benchmarks/benchmark.pl,
+    utils/install.pl
+  * Added more documentation
+  * Added install SQL sql/install_functions.sql
+  * Added trigger examples in sql/trigger_fun.sql
+
+0.3 Mon Mar  3 16:09:22 EST 2008
+  * memc_stats() added
+  * memc_stat_get_keys() added
+  * buffering added
+
+
+0.2 Tue Dec 18 14:14:27 PST 2007
+  * New UDF memc_servers_behavior_set()
+  * New UDF memc_list_behaviors()
+  * Better error handling
+  * New function memc_get_servers, using memcached_clone 
+  * Cleaned up OS X compile warnings
+  * More documentation
+
+0.1 ?
+  * Added support for memc_set()
+  * Added support for memc_get()
+  * Added support for memc_delete()
+  * Added support for memc_increment()
+  * Added support for memc_append()
+  * Added support for memc_prepend()
+

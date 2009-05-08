@@ -1,0 +1,53 @@
+=head1 NAME
+
+memc_prepend
+
+=head1 UDF 
+
+Libmemcached User Defined Function for MySQL 
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+memc_prepend() is a UDF used to prepend content to the beginning
+of an existing individual value from the memcached server from within
+MySQL. The first argument you must pass in a key value. The second
+aregument must be a data value which you wish to prepend to the end
+of your existing value stored in memcached.
+
+memc_prepend_by_key() functions the same as memc_prepend() with the addition
+requirement of a master key supplied (1st arg)
+
+=head1 RETURN
+
+NULL
+
+=head1 USAGE 
+
+memc_prepend('keyfoo', 'this will be prepended to beginning of object')
+memc_prepend_by_key('masterA', 'keyfoo', 'this will be prepended to beginning of object')
+
+
+=head1 HOME
+
+To find out more information please check:
+L<http://hg.tangent.org/memcached_functions_mysql>
+L<http://tangent.org/552/libmemcached.html>
+
+=head1 INSTALL
+
+CREATE FUNCTION memc_prepend RETURNS INT SONAME "libmemcached_functions_mysql.so";
+CREATE FUNCTION memc_prepend_by_key RETURNS INT SONAME "libmemcached_functions_mysql.so";
+
+=head1 AUTHOR
+
+Patrick Galbraith, E<lt>patg@patg.netE<gt>
+Brian Aker, E<lt>brian@tangent.orgE<gt>
+
+=head1 SEE ALSO
+
+memc_append()
+
+=cut
+
