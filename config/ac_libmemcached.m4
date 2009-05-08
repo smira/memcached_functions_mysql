@@ -14,8 +14,6 @@ AC_DEFUN([LIBMEMCACHED_CONFIG_TEST], [
       if test "`uname -s`" = "SunOS"
       then
         LDFLAGS="$LDFLAGS -Wl,-R${withval}/lib"
-      else
-        LDFLAGS="$LDFLAGS -Wl,--rpath -Wl,${withval}/lib"
       fi
     fi
   ])
