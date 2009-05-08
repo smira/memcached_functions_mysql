@@ -1,34 +1,39 @@
 # Exact paths to config junk
-^INSTALL$
-^aclocal.m4$
-^configure$
-^config/(config.guess|config.sub|depcomp|install-sh|ltmain.sh|missing)$
-^config.(log|status)$
-^libtool$
-^autom4te.cache$
-^autom4te.cache/*$
-^src/(libmemcached_config.h.in(.in)?|stamp-h1)$
-^src/.libs/*$
-^src/.deps/*$
-^stamp-h1$
-^config/config.guess
-^config/config.sub
-^config/depcomp
-^config/install-sh
-^config/ltmain.sh
-^config/missing
-^config/mkinstalldirs
+INSTALL
+aclocal.m4
+configure
+config/(config.guess|config.sub|depcomp|install-sh|ltmain.sh|missing)
+config.log
+config.status
+libtool
+autom4te.cache
+autom4te.cache/*
+src/libmemcached_config.h.in
+src/stamp-h1
+src/.libs/*
+src/.deps/*
+stamp-h1
+config/config.guess
+config/config.sub
+config/depcomp
+config/install-sh
+config/ltmain.sh
+config/missing
+config/mkinstalldirs
 
 # Build artifacts
-^src/libmemcached_functions_mysq.la$
+src/libmemcached_functions_mysq.la
 
-Makefile(.in)?$
-.(deps|libs)$
-\.l?o$
+Makefile
+Makefile.in
+*.deps
+*.libs
+*.lo
+*.o
 
 # Generated man files
-\.1$
-\.3$
+*.1
+*.3
 
 
 # Merged files
