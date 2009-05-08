@@ -118,13 +118,21 @@ long long memc_servers_set(__attribute__ ((unused)) UDF_INIT *initid,
   */
   memcached_version(master_memc);
 
-  if (master_memc->hosts[0].major_version >= 1 &&
+  /*
+   * don't enable CAS anyway, this breaks MemcacheQ
+   *
+   * If server pool is heterogenous for some reason,
+   * (memcached was added as first server and CAS
+   * was enabled, then MemcacheQ added).
+   */
+
+  /*if (master_memc->hosts[0].major_version >= 1 &&
       master_memc->hosts[0].minor_version >= 2 &&
       master_memc->hosts[0].micro_version >= 4)
     memcached_behavior_set(master_memc, MEMCACHED_BEHAVIOR_SUPPORT_CAS, set);
     fprintf(stderr, "version %d.%d.%d\n", master_memc->hosts[0].major_version,
             master_memc->hosts[0].minor_version,
-            master_memc->hosts[0].micro_version);
+            master_memc->hosts[0].micro_version);*/
 
   memcached_server_list_free(servers);
 
