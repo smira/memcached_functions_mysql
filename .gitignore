@@ -30,6 +30,7 @@ Makefile.in
 *.libs
 *.lo
 *.o
+*.dylib
 
 # Generated man files
 *.1
