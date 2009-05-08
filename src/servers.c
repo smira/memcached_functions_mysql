@@ -134,6 +134,7 @@ long long memc_servers_set(__attribute__ ((unused)) UDF_INIT *initid,
             master_memc->hosts[0].minor_version,
             master_memc->hosts[0].micro_version);*/
 
+  memcached_behavior_set(master_memc, MEMCACHED_BEHAVIOR_NO_BLOCK, set);
   memcached_server_list_free(servers);
 
   pthread_mutex_unlock(&memc_servers_mutex);
