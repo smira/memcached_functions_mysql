@@ -6,9 +6,6 @@
 #define ERRMSG_SIZE 1000
 
 int memc_get_servers(memcached_st *memc);
-memcached_st *memc_get_master();
-int memc_master_lock();
-int memc_master_unlock();
 
 typedef struct memc_function_st memc_function_st;
 struct memc_function_st {

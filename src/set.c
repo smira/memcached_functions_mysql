@@ -34,6 +34,10 @@ my_bool memc_set_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
   if (container == NULL)
     return 1;
 
+  /* Init the memcached_st we will use for this pass */
+  rc= memc_get_servers(&container->memc);
+  count= memcached_server_count(&container->memc);
+
   initid->ptr= (char *)container;
 
   return 0;
@@ -47,12 +51,10 @@ long long memc_set(UDF_INIT *initid, UDF_ARGS *args,
 
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
-  memc_master_lock();
-  rc= memcached_set(memc_get_master(),
+  rc= memcached_set(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
                     args->args[1], (size_t)args->lengths[1],
                     container->expiration, (uint16_t)0);
-  memc_master_unlock();
 
   return ((long long)rc);
 }
@@ -62,6 +64,7 @@ void memc_set_deinit(UDF_INIT *initid)
   /* if we allocated initid->ptr, free it here */
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
+  memcached_free(&container->memc);
   free(container);
 }
 my_bool memc_set_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
