@@ -38,17 +38,21 @@ my_bool memc_replace_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 
 long long memc_replace(UDF_INIT *initid, UDF_ARGS *args,
                        __attribute__ ((unused)) char *is_null,
-                       __attribute__ ((unused)) char *error)
+                       char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
+
+  if (args->args[1] == NULL)
+    args->lengths[1]= 0;
 
   rc= memcached_replace(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
                     args->args[1], (size_t)args->lengths[1],
                     container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
+
 }
 
 void memc_replace_deinit(UDF_INIT *initid)
@@ -80,10 +84,13 @@ my_bool memc_replace_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message
 
 long long memc_replace_by_key(UDF_INIT *initid, UDF_ARGS *args,
                        __attribute__ ((unused)) char *is_null,
-                       __attribute__ ((unused)) char *error)
+                       char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
+
+  if (args->args[2] == NULL)
+    args->lengths[2]= 0;
 
   rc= memcached_replace_by_key(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
@@ -91,7 +98,8 @@ long long memc_replace_by_key(UDF_INIT *initid, UDF_ARGS *args,
                     args->args[2], (size_t)args->lengths[2],
                     container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
+
 }
 
 void memc_replace_by_key_deinit(UDF_INIT *initid)

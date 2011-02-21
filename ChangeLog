@@ -1,3 +1,17 @@
+1.1 Wednesday, Feb 9, 2011 12:00:00 EST 2011
+ * Added new string functions since the libmemcached string functions were 
+   made local, updated memc_stats() to use these new functions
+ * Added memc_get_cas and memc_get_cas_by_key
+ * Fixed several calls to libmemcached functions that had changed in latest code
+
+1.0 Thursday, July 30, 2009 12:00:00 EST 2009
+ * Fixed issue of setting NULLs with user-defined variables (Thanks to
+ Jean-Jacques Moortgat @ aol dot com !)
+ * Fixed issue of obtaining a NULL value FROM memcached
+ * All set functions now return 0 (failure) or 1 (success)
+ * Other cleanups
+ * More tests
+
 0.9 Saturday April 11 12:00:00 EST 2009
  * Fixed issue per http://blogs.sun.com/trond/entry/debugging_memcached_udf_for_mysql#comments
  * Added memc_servers_version()

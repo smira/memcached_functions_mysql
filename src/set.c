@@ -44,19 +44,32 @@ my_bool memc_set_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 }
 
 long long memc_set(UDF_INIT *initid, UDF_ARGS *args,
-                   __attribute__ ((unused)) char *is_null,
+                   char *is_null,
                    char *error)
 {
   memcached_return rc;
+  *is_null= false;
 
   memc_function_st *container= (memc_function_st *)initid->ptr;
+  /*
+    This seems like a bug I'm trying to work around, but without
+    this, setting a NULL using a user-defined variable causes segfault
+
+    set @foo=concat('a',':', NULL);
+
+    mysql> select memc_set('a',@foo);
+    ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+  */
+  if (args->args[1] == NULL)
+    args->lengths[1]= 0;
 
   rc= memcached_set(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
                     args->args[1], (size_t)args->lengths[1],
                     container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_set_deinit(UDF_INIT *initid)
@@ -87,19 +100,32 @@ my_bool memc_set_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 
 long long memc_set_by_key(UDF_INIT *initid, UDF_ARGS *args,
                    __attribute__ ((unused)) char *is_null,
-                   __attribute__ ((unused)) char *error)
+                   char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
-  fprintf(stderr, "2: container->expiration %d", container->expiration);
+  /*
+    This seems like a bug I'm trying to work around, but without
+    this, setting a NULL using a user-defined variable causes segfault
+
+    set @foo=concat('a',':', NULL);
+
+    mysql> select memc_set('a',@foo);
+    ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+  */
+  if (args->args[2] == NULL)
+    args->lengths[2]= 0;
+
   rc= memcached_set_by_key(&container->memc,
                            args->args[0], (size_t)args->lengths[0],
                            args->args[1], (size_t)args->lengths[1],
                            args->args[2], (size_t)args->lengths[2],
                            container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
+
 }
 
 void memc_set_by_key_deinit(UDF_INIT *initid)
@@ -130,10 +156,13 @@ my_bool memc_cas_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 
 long long memc_cas(UDF_INIT *initid, UDF_ARGS *args,
                    __attribute__ ((unused)) char *is_null,
-                   __attribute__ ((unused)) char *error)
+                   char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
+
+  if (args->args[1] == NULL)
+    args->lengths[1]= 0;
 
   rc= memcached_cas(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
@@ -141,7 +170,8 @@ long long memc_cas(UDF_INIT *initid, UDF_ARGS *args,
                     container->expiration, (uint16_t)0,
                     (uint64_t) strtol(args->args[2], (char **)NULL, 10));
 
-  return ((long long)rc);
+
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_cas_deinit(UDF_INIT *initid)
@@ -171,10 +201,13 @@ my_bool memc_cas_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 
 long long memc_cas_by_key(UDF_INIT *initid, UDF_ARGS *args,
                    __attribute__ ((unused)) char *is_null,
-                   __attribute__ ((unused)) char *error)
+                   char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
+
+  if (args->args[2] == NULL)
+    args->lengths[2]= 0;
 
   rc= memcached_cas_by_key(&container->memc,
                     args->args[0], (size_t)args->lengths[0],
@@ -183,7 +216,7 @@ long long memc_cas_by_key(UDF_INIT *initid, UDF_ARGS *args,
                     container->expiration, (uint16_t)0,
                     (uint64_t) strtol(args->args[3], (char **)NULL, 10));
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_cas_by_key_deinit(UDF_INIT *initid)

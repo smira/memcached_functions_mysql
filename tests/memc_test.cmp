@@ -1,19 +1,19 @@
 memc_udf_version()
-0.8
+1.0
 memc_servers_set('127.0.0.1:11211')
 0
 memc_server_count()
 1
 memc_set('mysql:doc1', bcol)
-0
+1
 memc_get('mysql:doc1')
 This documentation is NOT distributed under a GPL license. Use of this documentation is subject to the following terms: You may create a printed copy of this documentation solely for your own personal use. Conversion to other formats is allowed as long as the actual content is not altered or edited in any way. You shall not publish or distribute this documentation in any form or on any media, except if you distribute the documentation in a manner similar to how MySQL disseminates it (that is, electronically for download on a Web site with the software) or on a CD-ROM or similar medium, provided however that the documentation is disseminated together with the software on the same medium. Any other use, such as any dissemination of printed copies or use of this documentation, in whole or in part, in another publication, requires the prior written consent from an authorized representative of MySQL AB. MySQL AB reserves any and all rights to this documentation not expressly granted above.
 memc_delete('mysql:doc1')
-0
+1
 memc_get('mysql:doc1')
 NULL
 memc_set('mysql:doc1', bcol, 10)
-0
+1
 memc_get('mysql:doc1')
 This documentation is NOT distributed under a GPL license. Use of this documentation is subject to the following terms: You may create a printed copy of this documentation solely for your own personal use. Conversion to other formats is allowed as long as the actual content is not altered or edited in any way. You shall not publish or distribute this documentation in any form or on any media, except if you distribute the documentation in a manner similar to how MySQL disseminates it (that is, electronically for download on a Web site with the software) or on a CD-ROM or similar medium, provided however that the documentation is disseminated together with the software on the same medium. Any other use, such as any dissemination of printed copies or use of this documentation, in whole or in part, in another publication, requires the prior written consent from an authorized representative of MySQL AB. MySQL AB reserves any and all rights to this documentation not expressly granted above.
 sleep(5)
@@ -25,29 +25,29 @@ sleep(6)
 memc_get('mysql:doc1')
 NULL
 memc_set('spot:test', ' Spot ')
-0
+1
 memc_get('spot:test')
  Spot 
 memc_prepend('spot:test', 'See')
-0
+1
 memc_get('spot:test')
 See Spot 
 memc_append('spot:test', 'run.')
-0
+1
 memc_get('spot:test')
 See Spot run.
 memc_delete('spot:test')
-0
+1
 memc_set_by_key('A','mysql:doc1', bcol)
-0
+1
 memc_get_by_key('A','mysql:doc1')
 This documentation is NOT distributed under a GPL license. Use of this documentation is subject to the following terms: You may create a printed copy of this documentation solely for your own personal use. Conversion to other formats is allowed as long as the actual content is not altered or edited in any way. You shall not publish or distribute this documentation in any form or on any media, except if you distribute the documentation in a manner similar to how MySQL disseminates it (that is, electronically for download on a Web site with the software) or on a CD-ROM or similar medium, provided however that the documentation is disseminated together with the software on the same medium. Any other use, such as any dissemination of printed copies or use of this documentation, in whole or in part, in another publication, requires the prior written consent from an authorized representative of MySQL AB. MySQL AB reserves any and all rights to this documentation not expressly granted above.
 memc_delete_by_key('A','mysql:doc1')
-0
+1
 memc_get_by_key('A','mysql:doc1')
 NULL
 memc_set_by_key('A', 'mysql:doc1', bcol, 10)
-0
+1
 memc_get_by_key('A', 'mysql:doc1')
 This documentation is NOT distributed under a GPL license. Use of this documentation is subject to the following terms: You may create a printed copy of this documentation solely for your own personal use. Conversion to other formats is allowed as long as the actual content is not altered or edited in any way. You shall not publish or distribute this documentation in any form or on any media, except if you distribute the documentation in a manner similar to how MySQL disseminates it (that is, electronically for download on a Web site with the software) or on a CD-ROM or similar medium, provided however that the documentation is disseminated together with the software on the same medium. Any other use, such as any dissemination of printed copies or use of this documentation, in whole or in part, in another publication, requires the prior written consent from an authorized representative of MySQL AB. MySQL AB reserves any and all rights to this documentation not expressly granted above.
 sleep(5)
@@ -59,21 +59,21 @@ sleep(6)
 memc_get_by_key('A', 'mysql:doc1')
 NULL
 memc_set_by_key('A','spot:test', ' Spot ')
-0
+1
 memc_get_by_key('A','spot:test')
  Spot 
 memc_prepend_by_key('A','spot:test', 'See')
-0
+1
 memc_get_by_key('A','spot:test')
 See Spot 
 memc_append_by_key('A','spot:test', 'run.')
-0
+1
 memc_get_by_key('A','spot:test')
 See Spot run.
 memc_delete_by_key('A','spot:test')
-0
+1
 memc_set('increment:test', 1)
-0
+1
 memc_get('increment:test')
 1
 memc_increment('increment:test')
@@ -97,21 +97,21 @@ memc_decrement('increment:test')
 memc_get('increment:test')
 6 
 memc_delete('increment:test')
-0
+1
 memc_set('add:test', 'someval')
-0
+1
 memc_add('add:test', 'someval')
-14
+0
 memc_delete('add:test')
-0
+1
 memc_add('add:test', 'someval')
-0
+1
 memc_get('add:test')
 someval
 memc_delete('add:test')
-0
+1
 memc_add('add:test', 'someval', 5)
-0
+1
 memc_get('add:test')
 someval
 sleep(2)
@@ -123,17 +123,17 @@ sleep(4)
 memc_get('add:test')
 NULL
 memc_replace('replace:test', 'replaced')
-14
-memc_set('replace:test', 'initial')
 0
+memc_set('replace:test', 'initial')
+1
 memc_get('replace:test')
 initial
 memc_replace('replace:test', 'replaced')
-0
+1
 memc_get('replace:test')
 replaced
 memc_replace('replace:test', 'replaced again', 5)
-0
+1
 memc_get('replace:test')
 replaced again
 sleep(6)
@@ -141,17 +141,17 @@ sleep(6)
 memc_get('replace:test')
 NULL
 memc_replace_by_key('A', 'replace:test', 'replaced')
-14
-memc_set_by_key('A', 'replace:test', 'initial')
 0
+memc_set_by_key('A', 'replace:test', 'initial')
+1
 memc_get_by_key('A', 'replace:test')
 initial
 memc_replace_by_key('A', 'replace:test', 'replaced')
-0
+1
 memc_get_by_key('A', 'replace:test')
 replaced
 memc_replace_by_key('A', 'replace:test', 'replaced again', 5)
-0
+1
 memc_get_by_key('A', 'replace:test')
 replaced again
 sleep(6)
@@ -159,7 +159,7 @@ sleep(6)
 memc_get_by_key('A', 'replace:test')
 NULL
 memc_add_by_key('A', 'add:test', 'someval', 5)
-0
+1
 memc_get_by_key('A', 'add:test')
 someval
 sleep(2)
@@ -171,41 +171,45 @@ sleep(4)
 memc_get_by_key('A', 'add:test')
 NULL
 memc_set_by_key('A', 'add:test', 'someval')
-0
+1
 memc_add_by_key('A', 'add:test', 'someval')
-14
+0
 memc_delete_by_key('A', 'add:test')
-0
+1
 memc_add_by_key('A', 'add:test', 'someval')
-0
+1
 memc_get_by_key('A', 'add:test')
 someval
 memc_delete_by_key('A', 'add:test')
-0
-memc_set('cas:test', 'casvalue')
+1
+memc_set('cas:test', 'some value')
+1
+memc_get('cas:test')
+some value
+memc_cas('cas:test', 'casvalue changed?', 999999)
 0
 memc_get('cas:test')
-casvalue
-memc_cas('cas:test', 'casvalue changed?', 1)
-12
+some value
+memc_get_cas('cas:test')
+31
+memc_cas('cas:test', 'casvalue changed?', memc_get_cas('cas:test'))
+1
 memc_get('cas:test')
-casvalue
-memc_cas('cas:test', 'casvalue changed again?', 22)
-12
-memc_get('cas:test')
-casvalue
-memc_set_by_key('A','cas:test', 'casvalue')
+casvalue changed?
+memc_set_by_key('A', 'cas:test', 'some value')
+1
+memc_get_by_key('A', 'cas:test')
+some value
+memc_cas_by_key('A', 'cas:test', 'casvalue changed?', 999999)
 0
-memc_get_by_key('A','cas:test')
-casvalue
-memc_cas_by_key('A','cas:test', 'casvalue', 1)
-12
-memc_get_by_key('A','cas:test')
-casvalue
-memc_cas_by_key('A','cas:test', 'casvalue', 22)
-12
-memc_get_by_key('A','cas:test')
-casvalue
+memc_get_by_key('A', 'cas:test')
+some value
+memc_get_cas_by_key('A', 'cas:test')
+33
+memc_cas_by_key('A', 'cas:test', 'casvalue changed?', memc_get_cas_by_key('A', 'cas:test'))
+1
+memc_get_by_key('A', 'cas:test')
+casvalue changed?
 memc_list_behaviors()
 \nMEMCACHED SERVER BEHAVIORS\nMEMCACHED_BEHAVIOR_SUPPORT_CAS\nMEMCACHED_BEHAVIOR_NO_BLOCK\nMEMCACHED_BEHAVIOR_TCP_NODELAY\nMEMCACHED_BEHAVIOR_HASH\nMEMCACHED_BEHAVIOR_CACHE_LOOKUPS\nMEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE\nMEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE\nMEMCACHED_BEHAVIOR_BUFFER_REQUESTS\nMEMCACHED_BEHAVIOR_KETAMA\nMEMCACHED_BEHAVIOR_POLL_TIMEOUT\nMEMCACHED_BEHAVIOR_RETRY_TIMEOUT\nMEMCACHED_BEHAVIOR_DISTRIBUTION\nMEMCACHED_BEHAVIOR_BUFFER_REQUESTS\nMEMCACHED_BEHAVIOR_USER_DATA\nMEMCACHED_BEHAVIOR_SORT_HOSTS\nMEMCACHED_BEHAVIOR_VERIFY_KEY\nMEMCACHED_BEHAVIOR_CONNECT_TIMEOUT\nMEMCACHED_BEHAVIOR_KETAMA_WEIGHTED\nMEMCACHED_BEHAVIOR_KETAMA_HASH\nMEMCACHED_BEHAVIOR_BINARY_PROTOCOL\nMEMCACHED_BEHAVIOR_SND_TIMEOUT\nMEMCACHED_BEHAVIOR_RCV_TIMEOUT\nMEMCACHED_BEHAVIOR_SERVER_FAILURE_LIMIT\nMEMCACHED_BEHAVIOR_IO_MSG_WATERMARK\nMEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK\n\0\0\0\0\0\0\0\nMEMCACHED_HASH_DEFAULT\nMEMCACHED_HASH_MD5\nMEMCA
 memc_list_distribution_types()
@@ -309,7 +313,7 @@ MEMCACHED_HASH_JENKINS
 memc_behavior_set('MEMCACHED_BEHAVIOR_HASH','MEMCACHED_HASH_HSIEH' )
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_HASH')
-MEMCACHED_HASH_HSIEH
+MEMCACHED_HASH_JENKINS
 memc_behavior_set('MEMCACHED_BEHAVIOR_HASH','MEMCACHED_HASH_MURMUR' )
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_HASH')
@@ -331,23 +335,23 @@ MEMCACHED_DISTRIBUTION_CONSISTENT_KETAMA
 memc_behavior_set('MEMCACHED_BEHAVIOR_DISTRIBUTION', @preserve_dist)
 0
 @size
-174848
+50556
 memc_behavior_set('MEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE', 60000)
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE')
-174848
+60000
 memc_behavior_set('MEMCACHED_BEHAVIOR_SOCKET_SEND_SIZE', @size)
 0
 @size
-87424
+87840
 memc_behavior_set('MEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE', 120000)
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE')
-87424
+120000
 memc_behavior_set('MEMCACHED_BEHAVIOR_SOCKET_RECV_SIZE', @size)
 0
 @size
-1000
+5000
 memc_behavior_set('MEMCACHED_BEHAVIOR_POLL_TIMEOUT', 100)
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_POLL_TIMEOUT')
@@ -363,22 +367,38 @@ memc_behavior_get('MEMCACHED_BEHAVIOR_RETRY_TIMEOUT')
 memc_behavior_set('MEMCACHED_BEHAVIOR_RETRY_TIMEOUT', @size)
 0
 @size
-0
+500
 memc_behavior_set('MEMCACHED_BEHAVIOR_IO_MSG_WATERMARK', 5)
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_IO_MSG_WATERMARK')
-0
+5
 memc_behavior_set('MEMCACHED_BEHAVIOR_IO_MSG_WATERMARK', @size)
 0
 @size
-0
+66560
 memc_behavior_set('MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK', 5)
 0
 memc_behavior_get('MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK')
-0
+5
 memc_behavior_set('MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK', @size)
 0
 memc_stat_get_keys()
 pid\nuptime\ntime\nversion\npointer_size\nrusage_user\nrusage_system\ncurr_items\ntotal_items\nbytes\ncurr_connections\ntotal_connections\nconnection_structures\ncmd_get\ncmd_set\nget_hits\nget_misses\nevictions\nbytes_read\nbytes_written\nlimit_maxbytes\nthreads\n
 if (memc_stats('localhost') IS NOT NULL, 'true', 'false')
 true
+memc_get('a')
+NULL
+memc_get('b')
+NULL
+memc_get('a')
+a:xxx
+memc_get('a')
+NULL
+memc_get('a')
+NULL
+memc_delete('a')
+1
+memc_delete('b')
+1
+memc_get('a')
+NULL

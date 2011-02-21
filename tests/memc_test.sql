@@ -10,6 +10,8 @@ DROP FUNCTION IF EXISTS memc_set;
 DROP FUNCTION IF EXISTS memc_set_by_key;
 DROP FUNCTION IF EXISTS memc_get;
 DROP FUNCTION IF EXISTS memc_get_by_key;
+DROP FUNCTION IF EXISTS memc_get_cas;
+DROP FUNCTION IF EXISTS memc_get_cas_by_key;
 DROP FUNCTION IF EXISTS memc_delete;
 DROP FUNCTION IF EXISTS memc_delete_by_key;
 DROP FUNCTION IF EXISTS memc_append;
@@ -40,6 +42,8 @@ CREATE FUNCTION memc_add RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_add_by_key RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_servers_set RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_server_count RETURNS INT SONAME "libmemcached_functions_mysql.so";
+CREATE FUNCTION memc_get_cas RETURNS INT SONAME "libmemcached_functions_mysql.so";
+CREATE FUNCTION memc_get_cas_by_key RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_set RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_set_by_key RETURNS INT SONAME "libmemcached_functions_mysql.so";
 CREATE FUNCTION memc_cas RETURNS INT SONAME "libmemcached_functions_mysql.so";
@@ -183,19 +187,25 @@ select memc_add_by_key('A', 'add:test', 'someval');
 select memc_get_by_key('A', 'add:test');
 select memc_delete_by_key('A', 'add:test');
 
-select memc_set('cas:test', 'casvalue');
+select memc_set('cas:test', 'some value');
 select memc_get('cas:test');
-select memc_cas('cas:test', 'casvalue changed?', 1);
+select memc_get_cas('cas:test');
+select memc_set('cas:test', 'new value');
 select memc_get('cas:test');
-select memc_cas('cas:test', 'casvalue changed again?', 22);
+select memc_get_cas('cas:test');
+select memc_set('cas:test', 'another new value');
 select memc_get('cas:test');
+select memc_get_cas('cas:test');
 
-select memc_set_by_key('A','cas:test', 'casvalue');
-select memc_get_by_key('A','cas:test');
-select memc_cas_by_key('A','cas:test', 'casvalue', 1);
-select memc_get_by_key('A','cas:test');
-select memc_cas_by_key('A','cas:test', 'casvalue', 22);
-select memc_get_by_key('A','cas:test');
+select memc_set_by_key('A', 'cas:test', 'some value');
+select memc_get_by_key('A', 'cas:test');
+select memc_get_cas_by_key('A', 'cas:test');
+select memc_set_by_key('A', 'cas:test', 'new value');
+select memc_get_by_key('A', 'cas:test');
+select memc_get_cas_by_key('A', 'cas:test');
+select memc_set_by_key('A', 'cas:test', 'another new value');
+select memc_get_by_key('A', 'cas:test');
+select memc_get_cas_by_key('A', 'cas:test');
 
 
 select memc_list_behaviors();
@@ -337,3 +347,36 @@ select memc_behavior_set('MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK', @size);
 select memc_stat_get_keys();
 
 select if (memc_stats('localhost') IS NOT NULL, 'true', 'false');
+
+-- test using test from Jean-Jacques Moortgat, j.moortgat@corp.aol.com
+drop table if exists test1;
+CREATE TABLE `test1` (
+    a varchar(32), 
+    b varchar(32) 
+    );
+
+DROP TRIGGER IF EXISTS test1_trigger;
+DELIMITER |
+CREATE TRIGGER test1_trigger BEFORE INSERT on test1
+  FOR EACH ROW
+  BEGIN
+  SET @column_array:=concat(NEW.a,':',NEW.b);
+  SET @tt:=memc_set(NEW.a,@column_array,600);
+END |
+
+INSERT INTO test1 (a) VALUES ('a');
+SELECT memc_get('a');
+INSERT INTO test1 (a) VALUES ('b');
+SELECT memc_get('b');
+INSERT INTO test1 (a,b) VALUES ('a', 'xxx');
+SELECT memc_get('a');
+INSERT INTO test1 (a) VALUES ('a');
+SELECT memc_get('a');
+INSERT INTO test1 (a) VALUES ('a');
+SELECT memc_get('a');
+INSERT INTO test1 (a,b) VALUES ('a', 'xxx');
+
+SELECT memc_delete('a');
+SELECT memc_delete('b');
+DROP TABLE test1;
+SELECT memc_get('a');

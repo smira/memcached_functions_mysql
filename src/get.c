@@ -54,7 +54,7 @@ my_bool memc_get_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 char *memc_get(UDF_INIT *initid, UDF_ARGS *args,
                 __attribute__ ((unused)) char *result,
                unsigned long *length,
-                __attribute__ ((unused)) char *is_null,
+                char *is_null,
                 __attribute__ ((unused)) char *error)
 {
   /* how do I utilise this? Print out in case of error? */
@@ -69,7 +69,12 @@ char *memc_get(UDF_INIT *initid, UDF_ARGS *args,
 
   *length= memcached_result_length(&container->results);
 
-  return (memcached_result_value(&container->results));
+  if (! *length)
+  {
+    *is_null= 1;
+  }
+
+  return  memcached_result_value(&container->results);
 }
 
 /* de-init UDF */
@@ -118,10 +123,10 @@ my_bool memc_get_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
   get cached object, takes hash-key arg
 */
 char *memc_get_by_key(UDF_INIT *initid, UDF_ARGS *args,
-                __attribute__ ((unused)) char *result,
-               unsigned long *length,
-                __attribute__ ((unused)) char *is_null,
-                __attribute__ ((unused)) char *error)
+                      __attribute__ ((unused)) char *result,
+                      unsigned long *length,
+                      char *is_null,
+                      __attribute__ ((unused)) char *error)
 {
   /* how do I utilise this? Print out in case of error? */
   memcached_return rc;
@@ -144,6 +149,10 @@ char *memc_get_by_key(UDF_INIT *initid, UDF_ARGS *args,
 
   memcached_fetch_result(&container->memc, &container->results, &rc);
   *length= memcached_result_length(&container->results);
+  if (! *length)
+  {
+    *is_null= 1;
+  }
 
   return (memcached_result_value(&container->results));
 }

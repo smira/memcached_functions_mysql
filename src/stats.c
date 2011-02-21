@@ -35,6 +35,7 @@ void memc_stat_get_value_deinit(UDF_INIT *initid);
 
 my_bool memc_stats_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
+  unsigned int x;
   memcached_return rc;
   memc_function_st *container;
 
@@ -56,7 +57,7 @@ my_bool memc_stats_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
   rc= memc_get_servers(&container->memc);
 
   /* Now setup the string */
-  container->stats_string= memcached_string_create(&container->memc, NULL, 1024);
+  container->stats_string= string_create(1024);
 
   initid->ptr= (char *)container;
 
@@ -77,10 +78,10 @@ char *memc_stats(UDF_INIT *initid, UDF_ARGS *args,
 
   memcached_stat_st *stat;
   memcached_server_st *servers;
-  memcached_server_st *server_list;
+  /*memcached_server_st *server_list;*/
 
   memc_function_st *container= (memc_function_st *)initid->ptr;
-  memcached_string_reset(container->stats_string);
+  string_reset(container->stats_string);
 
   servers= memcached_servers_parse(args->args[0]);
   memcached_server_push(&container->memc, servers);
@@ -96,23 +97,25 @@ char *memc_stats(UDF_INIT *initid, UDF_ARGS *args,
     return(error);
   }
 
-  server_list= memcached_server_list(&container->memc);
+  /*server_list= memcached_server_list(&container->memc);*/
 
   sprintf(buf, "Listing %u Server\n\n", memcached_server_count(&container->memc));
-  memcached_string_append(container->stats_string, buf, strlen(buf));
+  string_append(container->stats_string, buf);
   for (x= 0; x < memcached_server_count(&container->memc); x++)
   {
     char **list;
     char **ptr;
+    memcached_server_instance_st instance=
+        memcached_server_instance_by_position(&container->memc, x);
 
     list= memcached_stat_get_keys(&container->memc, &stat[x], &rc);
 
     sprintf(buf, "Server: %s (%u)\n",
-            memcached_server_name(&container->memc, server_list[x]),
-            memcached_server_port(&container->memc, server_list[x]));
+            memcached_server_name(instance),
+            memcached_server_port(instance));
 
 
-    memcached_string_append(container->stats_string, buf, strlen(buf));
+    string_append(container->stats_string, buf);
 
     for (ptr= list; *ptr; ptr++)
     {
@@ -121,13 +124,13 @@ char *memc_stats(UDF_INIT *initid, UDF_ARGS *args,
 
       sprintf(buf, "\t %s: %s\n", *ptr, value);
       free(value);
-      memcached_string_append(container->stats_string, buf, strlen(buf));
+      string_append(container->stats_string, buf);
     }
 
     free(list);
-    memcached_string_append(container->stats_string,"\n", strlen("\n"));
+    string_append(container->stats_string,"\n");
   }
-  *length= container->stats_string->end - container->stats_string->string;
+  *length= container->stats_string->length;
   free(stat);
   return container->stats_string->string;
 }
@@ -137,7 +140,7 @@ void memc_stats_deinit(UDF_INIT *initid)
   /* if we allocated initid->ptr, free it here */
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
-  memcached_string_free(container->stats_string);
+  free_string(container->stats_string);
   memcached_free(&container->memc);
   free(container);
 
@@ -284,7 +287,7 @@ my_bool memc_stat_get_keys_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
   rc= memc_get_servers(&container->memc);
 
   /* Now setup the string */
-  container->stats_string= memcached_string_create(&container->memc, NULL, 1024);
+  container->stats_string= string_create(1024);
 
   initid->ptr= (char *)container;
 
@@ -311,12 +314,12 @@ char *memc_stat_get_keys(UDF_INIT *initid, UDF_ARGS *args,
   list= memcached_stat_get_keys(&container->memc, &stat, &rc);
   for (ptr= list; *ptr; ptr++)
   {
-    memcached_string_append(container->stats_string, *ptr, strlen(*ptr));
-    memcached_string_append(container->stats_string, "\n", 1);
+    string_append(container->stats_string, *ptr);
+    string_append(container->stats_string, "\n");
   }
   free(list);
 
-  *length= container->stats_string->end - container->stats_string->string;
+  *length= container->stats_string->length;
   return container->stats_string->string;
 }
 /* de-init UDF */
@@ -325,7 +328,7 @@ void memc_stat_get_keys_deinit(UDF_INIT *initid)
   /* if we allocated initid->ptr, free it here */
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
-  memcached_string_free(container->stats_string);
+  free_string(container->stats_string);
   memcached_free(&container->memc);
   free(container);
 

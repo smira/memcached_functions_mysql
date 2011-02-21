@@ -1,7 +1,8 @@
 /* Common definitions for all functions */
 #include <libmemcached/memcached.h>
-#define VERSION_STRING "0.9"
-#define VERSION_STRING_LENGTH 3 
+#include "util.h"
+#define VERSION_STRING "1.1"
+#define VERSION_STRING_LENGTH 3
 #define MEMC_UDF_MAX_SIZE 256*256
 #define ERRMSG_SIZE 1000
 
@@ -13,7 +14,7 @@ struct memc_function_st {
   time_t expiration;
   memcached_st memc;
   memcached_result_st results;
-  memcached_string_st *stats_string;
+  my_string_st *stats_string;
 
 };
 memc_function_st *prepare_args(UDF_ARGS *args,

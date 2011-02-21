@@ -167,3 +167,63 @@ memc_function_st *prepare_args(UDF_ARGS *args,
   return container;
 }
 
+my_string_st *string_create(size_t string_size)
+{
+    my_string_st *str_st = malloc(sizeof(my_string_st));
+    str_st->string = NULL;
+    str_st->length= 0;
+    str_st->string = malloc(string_size);
+    str_st->current_size = string_size;
+    str_st->is_allocated = 1;
+    str_st->end = str_st->string;
+    return str_st;
+}
+
+int string_append(my_string_st *str_st, char *from_string)
+{
+        size_t str_len= strlen(from_string);
+        size_t tmp_len= str_st->end - str_st->string + str_len;
+        char *tmp_str= NULL;
+
+        if (tmp_len > str_st->current_size)
+        {
+            tmp_str= realloc((void *)str_st->string, tmp_len);
+
+            if (tmp_str == NULL)
+            {
+                perror("error allocating string");
+                exit(1);
+            }
+            str_st->string= tmp_str;
+            /*
+              still have not appended, so end is still start + current.
+              Realloc could have changed address
+            */
+            str_st->end= str_st->string + str_st->length;
+            /* though, it is needed to be known the new size */
+            str_st->current_size= tmp_len;
+
+        }
+        memcpy(str_st->end, from_string, str_len);
+        str_st->end += str_len;
+        str_st->length += str_len;
+        /*printf("string size: %d start: %x end: %x content: %s\n",
+          str_st->current_size, str_st->string, str_st->end, str_st->string);*/
+}
+
+void free_string (my_string_st *str_st)
+{
+    free(str_st->string);
+    free(str_st);
+}
+
+void string_reset(my_string_st *str_st)
+{
+    bzero(str_st->string, str_st->current_size);
+    str_st->length= 0;
+    str_st->end = str_st->string;
+}
+
+
+
+

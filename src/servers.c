@@ -88,6 +88,7 @@ long long memc_servers_set(__attribute__ ((unused)) UDF_INIT *initid,
   uint64_t set= 1;
   memcached_return rc= 0;
   memcached_server_st *servers;
+  uint version;
 
 
   pthread_mutex_lock(&memc_servers_mutex);
@@ -181,112 +182,6 @@ long long memc_server_count(__attribute__ ((unused)) UDF_INIT *initid,
 
   return ((long long) count);
 }
-my_bool memc_server_version_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
-{
-  memcached_return rc;
-  memc_function_st *container;
-
-  /* this is how to fail */
-  if (args->arg_count != 1)
-  {
-    strncpy(message,
-            "1 argument required: servers, comma-separated: memc_server_version(<servers>)",
-            MYSQL_ERRMSG_SIZE);
-    return 1;
-  }
-
-  args->arg_type[0]= STRING_RESULT;
-
-  initid->max_length= MEMC_UDF_MAX_SIZE;
-  container= calloc(1, sizeof(memc_function_st));
-
-  /* Init the memcached_st we will use for this pass */
-  rc= memc_get_servers(&container->memc);
-
-  /* Now setup the string */
-  container->stats_string= memcached_string_create(&container->memc, NULL, 1024);
-
-  initid->ptr= (char *)container;
-
-  return 0;
-}
-
-/*
-  memc_server_count
-  get cached object, takes hash-key arg
-*/
-char *memc_server_version(UDF_INIT *initid,
-                       UDF_ARGS *args,
-                       __attribute__ ((unused)) char *result,
-                       unsigned long *length,
-                       __attribute__ ((unused)) char *is_null,
-                       __attribute__ ((unused)) char *error)
-{
-
-  unsigned int count= 0;
-  unsigned int i= 0;
-  memcached_return rc= MEMCACHED_SUCCESS;
-  char buf[100];
-  memcached_server_st *servers;
-  memcached_server_st *server_list;
-
-  memc_function_st *container= (memc_function_st *)initid->ptr;
-  memcached_string_reset(container->stats_string);
-
-  servers= memcached_servers_parse(args->args[0]);
-  memcached_server_push(&container->memc, servers);
-  memcached_server_list_free(servers);
-
-  if (rc != MEMCACHED_SUCCESS && rc != MEMCACHED_SOME_ERRORS)
-  {
-    sprintf(error, "Failure to communicate with servers (%s)\n",
-	   memcached_strerror(&container->memc, rc));
-    *length= strlen(error);
-    return(error);
-  }
-
-  server_list= memcached_server_list(&container->memc);
-
-  for (i= 0; i < memcached_server_count(&container->memc); i++)
-  {
-    sprintf(buf, "Server: %s (%u) ",
-            memcached_server_name(&container->memc, server_list[i]),
-            memcached_server_port(&container->memc, server_list[i]));
-
-    memcached_string_append(container->stats_string, buf, strlen(buf));
-
-    rc= memcached_version(&container->memc);
-
-    fprintf(stderr, "rc %d error: %s\n",
-            rc, memcached_strerror(&container->memc, rc));
-
-    fprintf(stderr, "version %d.%d.%d\n",
-            container->memc.hosts[i].major_version,
-            container->memc.hosts[i].minor_version,
-            container->memc.hosts[i].micro_version);
-
-    sprintf(buf, "version %d.%d.%d\n",
-            container->memc.hosts[i].major_version,
-            container->memc.hosts[i].minor_version,
-            container->memc.hosts[i].micro_version);
-
-    memcached_string_append(container->stats_string, buf, strlen(buf));
-  }
-  *length= container->stats_string->end - container->stats_string->string;
-  return container->stats_string->string;
-}
-
-void memc_server_version_deinit(UDF_INIT *initid)
-{
-  /* if we allocated initid->ptr, free it here */
-  memc_function_st *container= (memc_function_st *)initid->ptr;
-
-  memcached_string_free(container->stats_string);
-  memcached_free(&container->memc);
-  free(container);
-
-  return;
-}
 
 
 
@@ -342,6 +237,7 @@ my_bool memc_servers_behavior_set_init(__attribute__ ((unused)) UDF_INIT *initid
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_SORT_HOSTS") ||
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_VERIFY_KEY") ||
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_TCP_NODELAY") ||
+      ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_KETAMA_WEIGHTED") ||
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_KETAMA") ||
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_CACHE_LOOKUPS") ||
       ! strcasecmp(args->args[0], "MEMCACHED_BEHAVIOR_BUFFER_REQUESTS"))

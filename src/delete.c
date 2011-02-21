@@ -39,7 +39,7 @@ my_bool memc_delete_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 long long memc_delete(UDF_INIT *initid,
                       UDF_ARGS *args,
                       __attribute__ ((unused)) char *is_null,
-                       __attribute__ ((unused)) char *error)
+                      char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
@@ -48,7 +48,7 @@ long long memc_delete(UDF_INIT *initid,
                        args->args[0], (size_t)args->lengths[0],
                        container->expiration);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_delete_deinit(UDF_INIT *initid)
@@ -81,7 +81,7 @@ my_bool memc_delete_by_key_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 long long memc_delete_by_key(UDF_INIT *initid,
                       UDF_ARGS *args,
                       __attribute__ ((unused)) char *is_null,
-                       __attribute__ ((unused)) char *error)
+                       char *error)
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
@@ -91,7 +91,7 @@ long long memc_delete_by_key(UDF_INIT *initid,
                        args->args[1], (size_t)args->lengths[1],
                        container->expiration);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_delete_by_key_deinit(UDF_INIT *initid)

@@ -43,13 +43,25 @@ long long memc_append(UDF_INIT *initid,
 {
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
+  /*
+    This seems like a bug I'm trying to work around, but without
+    this, setting a NULL using a user-defined variable causes segfault
+
+    set @foo=concat('a',':', NULL);
+
+    mysql> select memc_set('a',@foo);
+    ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+  */
+  if (args->args[1] == NULL)
+    args->lengths[1]= 0;
 
   rc= memcached_append(&container->memc,
                        args->args[0], (size_t)args->lengths[0],
                        args->args[1], (size_t)args->lengths[1],
                        container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_append_deinit(UDF_INIT *initid)
@@ -86,15 +98,26 @@ long long memc_append_by_key(UDF_INIT *initid,
   memcached_return rc;
   memc_function_st *container= (memc_function_st *)initid->ptr;
 
-  fprintf(stderr, "\nappend_by_key('%s', '%s','%s', %d)\n",
-          args->args[0], args->args[1], args->args[2], container->expiration );
+  /*
+    This seems like a bug I'm trying to work around, but without
+    this, setting a NULL using a user-defined variable causes segfault
+
+    set @foo=concat('a',':', NULL);
+
+    mysql> select memc_set('a',@foo);
+    ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+  */
+  if (args->args[2] == NULL)
+    args->lengths[2]= 0;
+
   rc= memcached_append_by_key(&container->memc,
                               args->args[0], (size_t)args->lengths[0],
                               args->args[1], (size_t)args->lengths[1],
                               args->args[2], (size_t)args->lengths[2],
                               container->expiration, (uint16_t)0);
 
-  return ((long long)rc);
+  return (rc != MEMCACHED_SUCCESS) ? (long long) 0 : (long long) 1;
 }
 
 void memc_append_by_key_deinit(UDF_INIT *initid)

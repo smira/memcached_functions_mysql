@@ -2,7 +2,7 @@ AC_INIT(src/get.c)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(src/libmemcached_config.h)
 
-AM_INIT_AUTOMAKE("memcached_functions_mysql", 0.9 )
+AM_INIT_AUTOMAKE("memcached_functions_mysql", 1.1 )
 
 AC_PROG_CC
 AC_PROG_LIBTOOL
